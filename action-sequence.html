@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!-- inspired by http://www.html5multimedia.com/code/ch9/video-canvas-screenshot.html -->
+<html lang="en">
+<head>
+	<meta charset=utf-8>
+	<title>video2action-sequence</title>
+	<style>
+	
+	.overlay {
+		position:relative;
+	}
+	.overlay img {
+		position:absolute;
+		left:0;
+		top:0;
+		opacity:0.10;
+	}
+	.overlay.video img {
+		position:absolute;
+		left:0;
+		top:0;
+		opacity:0.40;
+	}
+	.strip img {
+		width:200px;
+	}
+	canvas {
+		display:none;
+	}
+	</style>
+</head>
+<body>
+	<div class="overlay video">
+		<video controls >
+			<source src="./sample.mp4" type="video/mp4">
+		</video>
+		<img>
+	</div>
+	<canvas></canvas>
+	<button id="snap" onclick="snap()">Take screenshot</button>
+	<div class="strip"></div>
+	<div class="overlay images"></div>
+	
+	
+	
+	<script>
+		
+		var video = document.querySelector('video');
+		var canvas = document.querySelector('canvas');
+		var strip = document.querySelector('.strip');
+		var overlay = document.querySelector('.overlay.images');
+		var lastImage = document.querySelector('.overlay.video img');
+		var context = canvas.getContext('2d');
+		
+		video.playbackRate=0.2;
+		// Add a listener to wait for the 'loadedmetadata' state so the video's dimensions can be read
+		video.addEventListener('loadedmetadata', function() {
+			canvas.width = video.videoWidth
+			canvas.height = video.videoHeight;			
+		}, false);
+		
+		// Takes a snapshot of the video
+		function snap() {
+			// Define the size of the rectangle that will be filled (basically the entire element)
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			// Grab the image from the video
+			context.drawImage(video, 0, 0);
+			//img.setAttribute('crossOrigin', 'anonymous');
+			var url=canvas.toDataURL('image/png');
+			lastImage.src=url;
+			var img=new Image();
+			img.src=url;
+			strip.appendChild(img);
+			overlay.appendChild(img.cloneNode(true));
+			
+			// chrome Save Method ;-) http://www.codepool.biz/how-to-use-javascript-to-save-canvas-data-in-chrome.html
+			var link = document.createElement('a');
+            link.download = "action-sequence."+video.currentTime+".png";
+            link.href = url.replace("image/png", "image/octet-stream");;
+            link.click();
+			
+		}
+		 
+	</script>
+</body>
+</html>
