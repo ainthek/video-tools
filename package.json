@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "hs && echo 'open http://127.0.0.1:8080/action-sequence.html"
+    "start": "hs & echo 'open http://127.0.0.1:8080/action-sequence.html'"
   },
   "author": "",
   "license": "ISC",
